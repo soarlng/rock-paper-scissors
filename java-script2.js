@@ -1,6 +1,6 @@
 
 
-const resultsDiv = document.createElement('div');
+const resultsDiv = document.querySelector('.results-div');
 resultsDiv.id = 'resultsDiv';
 document.body.appendChild(resultsDiv);
 
