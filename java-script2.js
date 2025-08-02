@@ -1,104 +1,97 @@
-let humanScore = 0;
-let computerScore = 0;
-let roundsPlayed = 0;
 
 
+const resultsDiv = document.createElement('div');
+resultsDiv.id = 'resultsDiv';
+document.body.appendChild(resultsDiv);
 
-function playRound(humanChoice, computerChoice){
-    if(roundsPlayed>=5) return;
-
-    if(humanChoice===computerChoice){
-        const p = document.createElement('p')
-        p.textContent = "Tie!";
-        resultsDiv.appendChild(p);
-    }
-
-    else if (humanChoice==="rock"){
-
-        if (computerChoice==="paper") {
-            computerScore+=1;
-            const p = document.createElement('p')
-            p.textContent = "Round lost. Paper beats rock!";
-            resultsDiv.appendChild(p);
-        }
-        else {
-            humanScore+=1;
-            const p = document.createElement('p');
-            p.textContent = "Round won. Rock beats scissors!";
-            resultsDiv.appendChild(p);
-        }
-    }
-
-    else if(humanChoice==="paper"){
-
-        if (computerChoice==="scissors"){ 
-            computerScore+=1;
-            const p = document.createElement('p');
-            p.textContent = "Round lost. Scissors beat paper!";
-            resultsDiv.appendChild(p);
-        }
-        else {
-            humanScore+=1;
-            const p = document.createElement('p');
-            p.textContent = "Round won. Paper beats rock!";
-            resultsDiv.appendChild(p);
-        }
-    }
-
-    else{
-
-        if (computerChoice==="rock") {
-            computerScore+=1;
-            const p = document.createElement('p');
-            p.textContent = "Round lost. Rock beats scissors!";
-            resultsDiv.appendChild(p);
-        }
-        else {
-            humanScore+=1;
-            const p = document.createElement('p');
-            p.textContent = "Round won. Scissors beats paper!";
-            resultsDiv.appendChild(p);
-        }
-    }
-    roundsPlayed+=1;
-    if (roundsPlayed===5){
-        const final = document.createElement('p');
-        resultsDiv.appendChild(final);
-        if(humanScore>computerScore) final.textContent = `Game over. You won! Final Score: You ${humanScore} - Computer ${computerScore}`;
-        else if (computerScore>humanScore) final.textContent = `Game over. You lost! Final Score: You ${humanScore} - Computer ${computerScore}`;
-        else final.textContent = `Game over. It's a tie! Final Score: You ${humanScore} - Computer ${computerScore}`;
-
-    }
-
-}
-
+const rockbtn = document.getElementById('rockbtn');
+rockbtn.addEventListener('click', () => playRound('rock'));
+const paperbtn = document.getElementById('paperbtn');
+paperbtn.addEventListener('click', () => playRound('paper'));
+const scissorsbtn = document.getElementById('scissorsbtn');
+scissorsbtn.addEventListener('click', () => playRound('scissors'));
 
 function getComputerChoice(){
-    const selectionArray = ["rock", "paper", "scissors"];
-    const randomNum = selectionArray[Math.floor(Math.random()*selectionArray.length)];
-    return randomNum;
-
+  let computerChoice = '';
+  let randomNumber = Math.random();
+  if(randomNumber<=0.33) computerChoice = "rock";
+  else if (randomNumber<=0.66) computerChoice =  "paper";
+  else computerChoice =  "scissors";
+  return computerChoice;
 }
 
-const rockButton = document.querySelector('#rock');
-const paperButton = document.querySelector('#paper');
-const scissorsButton = document.querySelector('#scissors');
-const resultsDiv = document.querySelector('.results');
+let humanScore=0;
+let computerScore=0;
+let gameOver = false;
 
-rockButton.addEventListener('click', () => {
+function playRound(humanChoice){
+    if (gameOver) return;
     const computerChoice = getComputerChoice();
-    const humanChoice = "rock";
-    playRound(humanChoice, computerChoice);
+    
+    if(humanChoice===computerChoice) {
+      const p = document.createElement('p');
+      p.textContent = "Tie!"
+      resultsDiv.appendChild(p);
     }
-);
-paperButton.addEventListener('click', () => {
-    const computerChoice = getComputerChoice();
-    const humanChoice = "paper";
-    playRound(humanChoice, computerChoice);
-})
-scissorsButton.addEventListener('click', () => {
-    const computerChoice = getComputerChoice();
-    const humanChoice = "scissors";
-    playRound(humanChoice, computerChoice);
-})
 
+    else if (humanChoice==='rock'){
+
+      if (computerChoice==='paper') {
+        computerScore+=1;
+        const p = document.createElement('p');
+        p.textContent = "You lose! Paper beats rock."
+        resultsDiv.appendChild(p);
+      }
+      else {
+        humanScore+=1;
+        const p = document.createElement('p');
+        p.textContent = "You win! Rock beats scissors."
+        resultsDiv.appendChild(p);
+      }
+    }
+
+    else if (humanChoice==='paper'){
+
+      if (computerChoice==='rock') {
+        humanScore+=1;
+        const p = document.createElement('p');
+        p.textContent = "You win! Paper beats rock."
+        resultsDiv.appendChild(p);
+        
+      }
+      else {
+        computerScore+=1;
+        const p = document.createElement('p');
+        p.textContent = "You lose! Scissors beat paper."
+        resultsDiv.appendChild(p);
+      } 
+    }
+
+    else if (humanChoice==='scissors'){
+
+      if (computerChoice==='rock') {
+        computerScore+=1;
+        const p = document.createElement('p');
+        p.textContent = "You lose! Rock beats scissors."
+        resultsDiv.appendChild(p);
+      }
+      else {
+        humanScore+=1;
+        const p = document.createElement('p');
+        p.textContent = "You win! Scissors beat paper."
+        resultsDiv.appendChild(p);
+      }
+    }
+    checkScore();
+  }
+function checkScore(){
+  if(humanScore === 5 || computerScore === 5){
+    const p = document.createElement('p');
+    if(humanScore>=computerScore) p.textContent = `You win! Score: You - ${humanScore}; Computer - ${computerScore}`;
+    else p.textContent = `You lose! Score: You - ${humanScore}; Computer - ${computerScore}`;
+    resultsDiv.appendChild(p);
+    gameOver = true;
+    humanScore = 0;
+    computerScore = 0;
+  }
+}
